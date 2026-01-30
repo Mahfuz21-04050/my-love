@@ -236,13 +236,28 @@
       align-items: center;
     }
 
-    .photo-section {
+    .photos-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 40px;
+      width: 100%;
+    }
+
+    .photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .photo-wrapper {
       width: 220px;
       height: 220px;
       border-radius: 50%;
       overflow: hidden;
       border: 12px solid white;
-      margin-bottom: 40px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
       background: var(--gradient);
       display: flex;
@@ -250,6 +265,13 @@
       justify-content: center;
       position: relative;
       animation: rotatePhoto 20s linear infinite;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .photo-wrapper:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes rotatePhoto {
@@ -262,7 +284,7 @@
       }
     }
 
-    .photo-section::after {
+    .photo-wrapper::after {
       content: '';
       position: absolute;
       width: 100%;
@@ -275,6 +297,53 @@
       font-size: 5.5rem;
       color: white;
       z-index: 2;
+    }
+
+    .profile-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .photo-label {
+      background: var(--gradient);
+      color: white;
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      min-width: 200px;
+    }
+
+    .photo-label span {
+      display: block;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 5px;
+    }
+
+    .photo-upload-btn {
+      background: var(--light-color);
+      border: 2px dashed var(--accent-color);
+      color: var(--primary-color);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .photo-upload-btn:hover {
+      background: var(--accent-color);
+      color: white;
     }
 
     .message-container {
@@ -294,11 +363,17 @@
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255, 77, 141, 0.1);
+      cursor: pointer;
     }
 
     .message-box:hover {
       transform: translateY(-10px);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .message-box.playing {
+      background-color: rgba(255, 77, 141, 0.1);
+      border-color: var(--primary-color);
     }
 
     .message-box::before {
@@ -392,6 +467,12 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
+    }
+
+    .hidden-message.playing {
+      background-color: rgba(255, 77, 141, 0.1);
+      border-color: var(--primary-color);
     }
 
     .hidden-message::before {
@@ -464,6 +545,311 @@
       opacity: 0.8;
     }
 
+    /* Voice control panel */
+    .voice-controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .voice-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gradient);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .voice-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .voice-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .voice-btn.stop {
+      background: #5a3d5c;
+    }
+
+    /* Image upload modal */
+    .upload-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-content h3 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .upload-area {
+      border: 3px dashed var(--accent-color);
+      border-radius: 15px;
+      padding: 40px 20px;
+      margin: 20px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      background: var(--light-color);
+      border-color: var(--primary-color);
+    }
+
+    .upload-area i {
+      font-size: 4rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    .upload-area p {
+      color: var(--dark-color);
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-area span {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .preview-img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: none;
+      border: 3px solid var(--accent-color);
+    }
+
+    .preview-img.show {
+      display: block;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .modal-btn {
+      padding: 12px 30px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-btn.confirm {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .modal-btn.cancel {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Predefined images modal */
+    .predefined-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .predefined-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .predefined-img:hover {
+      transform: scale(1.05);
+      border-color: var(--primary-color);
+    }
+
+    .predefined-img.selected {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 15px rgba(255, 77, 141, 0.5);
+    }
+
+    .upload-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid var(--accent-color);
+      background: white;
+      color: var(--dark-color);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.1rem;
+    }
+
+    .option-btn:hover {
+      background: var(--light-color);
+      transform: translateY(-3px);
+    }
+
+    .option-btn.upload {
+      background: var(--gradient);
+      color: white;
+      border: none;
+    }
+
+    /* Image link input */
+    .image-link-input {
+      margin: 20px 0;
+    }
+
+    .link-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid var(--accent-color);
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .link-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px rgba(255, 77, 141, 0.3);
+    }
+
+    .link-help {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .link-help ul {
+      margin: 10px 0 10px 20px;
+    }
+
+    .link-help li {
+      margin-bottom: 5px;
+    }
+
+    /* Backup images section */
+    .backup-images {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .backup-images h5 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .backup-img-btn {
+      background: white;
+      border: 1px solid var(--accent-color);
+      border-radius: 5px;
+      padding: 8px 12px;
+      margin: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .backup-img-btn:hover {
+      background: var(--light-color);
+    }
+
+    /* Error message */
+    .image-error {
+      color: #e74c3c;
+      background: #ffeaea;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
     /* Mobile Optimizations */
     @media (max-width: 768px) {
       body {
@@ -511,14 +897,25 @@
         padding: 25px 20px;
       }
 
-      .photo-section {
+      .photos-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .photo-wrapper {
         width: 180px;
         height: 180px;
-        margin-bottom: 30px;
       }
 
       .photo-placeholder {
         font-size: 4.5rem;
+      }
+
+      .photo-label {
+        padding: 8px 20px;
+        font-size: 1.1rem;
+        min-width: 180px;
       }
 
       .message-container {
@@ -568,6 +965,35 @@
         padding: 20px 15px;
         font-size: 1rem;
       }
+
+      .voice-controls {
+        top: 10px;
+        right: 10px;
+      }
+
+      .voice-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+      }
+
+      .modal-content {
+        padding: 25px 20px;
+        width: 95%;
+      }
+
+      .upload-area {
+        padding: 30px 15px;
+      }
+
+      .upload-area i {
+        font-size: 3rem;
+      }
+
+      .predefined-img {
+        width: 100px;
+        height: 100px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -585,7 +1011,7 @@
         padding: 8px 16px;
       }
 
-      .photo-section {
+      .photo-wrapper {
         width: 160px;
         height: 160px;
         border-width: 8px;
@@ -603,6 +1029,24 @@
         padding: 15px 20px;
         font-size: 1.1rem;
       }
+
+      .voice-controls {
+        flex-direction: row;
+        top: auto;
+        bottom: 20px;
+        right: 50%;
+        transform: translateX(50%);
+      }
+
+      .photo-label {
+        font-size: 1rem;
+        min-width: 160px;
+      }
+
+      .predefined-img {
+        width: 80px;
+        height: 80px;
+      }
     }
 
     /* Extra small devices */
@@ -616,7 +1060,7 @@
         padding: 20px 15px;
       }
 
-      .photo-section {
+      .photo-wrapper {
         width: 140px;
         height: 140px;
       }
@@ -627,6 +1071,11 @@
 
       .message-box p {
         font-size: 1rem;
+      }
+
+      .predefined-img {
+        width: 70px;
+        height: 70px;
       }
     }
 
@@ -659,10 +1108,14 @@
         padding: 20px;
       }
 
-      .photo-section {
+      .photo-wrapper {
         width: 120px;
         height: 120px;
-        margin-bottom: 20px;
+      }
+
+      .photos-section {
+        flex-direction: row;
+        gap: 20px;
       }
     }
 
@@ -694,6 +1147,101 @@
 </head>
 
 <body>
+  <!-- Upload Modal -->
+  <div class="upload-modal" id="uploadModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">ছবি সেট করুন</h3>
+
+      <div class="upload-options" id="uploadOptions">
+        <button class="option-btn upload" id="usePredefinedBtn">
+          <i class="fas fa-images"></i> প্রিমেড ছবি ব্যবহার করুন
+        </button>
+        <button class="option-btn" id="uploadCustomBtn">
+          <i class="fas fa-upload"></i> নিজের ছবি আপলোড করুন
+        </button>
+        <button class="option-btn" id="useLinkBtn">
+          <i class="fas fa-link"></i> লিঙ্ক থেকে ছবি দিন
+        </button>
+      </div>
+
+      <!-- Predefined Images Section -->
+      <div id="predefinedSection" style="display: none;">
+        <h4 id="predefinedTitle">একটি ছবি নির্বাচন করুন</h4>
+        <div class="image-error" id="imageError">
+          ছবি লোড করতে সমস্যা হচ্ছে। দয়া করে অন্য একটি ছবি নির্বাচন করুন অথবা লিঙ্ক থেকে ছবি দিন।
+        </div>
+        <div class="predefined-images" id="predefinedImages">
+          <!-- Images will be loaded here -->
+        </div>
+        <div class="backup-images" id="backupImages">
+          <h5>ছবি দেখতে সমস্যা হলে নিচের বিকল্পগুলো ব্যবহার করুন:</h5>
+          <div>
+            <button class="backup-img-btn" data-url="https://i.postimg.cc/CxN13v1V/couple1.jpg">বিকল্প ১</button>
+            <button class="backup-img-btn" data-url="https://i.postimg.cc/JnNszv3t/couple2.jpg">বিকল্প ২</button>
+            <button class="backup-img-btn" data-url="https://i.postimg.cc/qvqZRymd/couple3.jpg">বিকল্প ৩</button>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn confirm" id="confirmPredefined">সিলেক্ট করুন</button>
+          <button class="modal-btn cancel" id="backToOptions">পিছনে যান</button>
+        </div>
+      </div>
+
+      <!-- Custom Upload Section -->
+      <div id="customUploadSection" style="display: none;">
+        <div class="upload-area" id="uploadArea">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>ছবি এখানে আপলোড করুন</p>
+          <p><span>ক্লিক করুন</span> অথবা ফাইল ড্রপ করুন</p>
+          <input type="file" id="imageInput" class="file-input" accept="image/*">
+        </div>
+        <img id="imagePreview" class="preview-img" alt="ছবি প্রিভিউ">
+        <div class="modal-buttons">
+          <button class="modal-btn confirm" id="confirmUpload">সেট করুন</button>
+          <button class="modal-btn cancel" id="cancelUpload">বাতিল</button>
+        </div>
+      </div>
+
+      <!-- Link Input Section -->
+      <div id="linkInputSection" style="display: none;">
+        <div class="image-link-input">
+          <input type="text" id="imageLinkInput" class="link-input" placeholder="https://example.com/your-image.jpg">
+          <button class="modal-btn confirm" id="testLinkBtn" style="width: 100%; margin-bottom: 15px;">
+            <i class="fas fa-eye"></i> ছবি টেস্ট করুন
+          </button>
+          <img id="linkPreview" class="preview-img" alt="লিঙ্ক থেকে ছবি">
+
+          <div class="link-help">
+            <p><strong>লিঙ্ক পাওয়ার সহজ উপায়:</strong></p>
+            <ul>
+              <li><a href="https://postimages.org/" target="_blank">Postimages.org</a> - এখানে আপলোড করে Direct Link নিন
+              </li>
+              <li><a href="https://imgbb.com/" target="_blank">ImgBB.com</a> - আরেকটি সহজ বিকল্প</li>
+              <li>Google Drive থেকে: ফাইল শেয়ার করুন → Anyone with link → Copy link</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn confirm" id="confirmLink">সেট করুন</button>
+          <button class="modal-btn cancel" id="cancelLink">বাতিল</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice controls -->
+  <div class="voice-controls">
+    <button class="voice-btn" id="readAllBtn" title="সব পড়ুন">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <button class="voice-btn stop" id="stopBtn" title="বন্ধ করুন" disabled>
+      <i class="fas fa-stop"></i>
+    </button>
+    <button class="voice-btn" id="readHeaderBtn" title="হেডার পড়ুন">
+      <i class="fas fa-heading"></i>
+    </button>
+  </div>
+
   <!-- Floating hearts background -->
   <div class="floating-hearts" id="floatingHearts"></div>
 
@@ -711,27 +1259,55 @@
     </div>
 
     <div class="content">
-      <div class="photo-section">
-        <div class="photo-placeholder">
-          <i class="fas fa-heart" style="color: white;"></i>
+      <div class="photos-section">
+        <!-- Era's Photo -->
+        <div class="photo-container">
+          <div class="photo-wrapper" id="eraPhotoWrapper" data-type="era">
+            <div class="photo-placeholder" id="eraPlaceholder">
+              <i class="fas fa-heart" style="color: white;"></i>
+            </div>
+            <img id="eraPhoto" class="profile-photo" style="display: none;" alt="Era-র ছবি">
+          </div>
+          <div class="photo-label">
+            Era-র ছবি <span>প্রিয় জন্মদিনের মেয়ে</span>
+          </div>
+          <button class="photo-upload-btn" data-type="era">
+            <i class="fas fa-camera"></i> ছবি সেট করুন
+          </button>
+        </div>
+
+        <!-- Mahfuzur's Photo -->
+        <div class="photo-container">
+          <div class="photo-wrapper" id="mahfuzurPhotoWrapper" data-type="mahfuzur">
+            <div class="photo-placeholder" id="mahfuzurPlaceholder">
+              <i class="fas fa-user" style="color: white;"></i>
+            </div>
+            <img id="mahfuzurPhoto" class="profile-photo" style="display: none;" alt="Mahfuzur-র ছবি">
+          </div>
+          <div class="photo-label">
+            Mahfuzur-র ছবি <span>প্রেমিকের পক্ষ থেকে</span>
+          </div>
+          <button class="photo-upload-btn" data-type="mahfuzur">
+            <i class="fas fa-camera"></i> ছবি সেট করুন
+          </button>
         </div>
       </div>
 
       <div class="message-container">
-        <div class="message-box animate__animated animate__fadeInLeft">
+        <div class="message-box animate__animated animate__fadeInLeft" id="messageBox1">
           <h3><i class="fas fa-star"></i> প্রিয় Era,</h3>
           <p>জন্মদিনে তোমার জন্য রইলো আমার হৃদয়ের গভীর থেকে ভালোবাসা ও শুভকামনা। জীবনটা যেন তোমার জন্য প্রতিটি দিন নতুন
             সুখ, নতুন আশা আর নতুন স্বপ্ন নিয়ে আসে। তুমি সাফল্যের চূড়ায় পৌঁছাও, এই কামনা করি।</p>
         </div>
 
-        <div class="message-box animate__animated animate__fadeInRight">
+        <div class="message-box animate__animated animate__fadeInRight" id="messageBox2">
           <h3><i class="fas fa-heart"></i> তোমার জন্য বিশেষ কিছু কথাঃ</h3>
           <p>তুমি আলোর মতো আমার জীবনে, যেভাবে সূর্য অন্ধকার দূর করে। তোমার হাসি আমার পৃথিবীকে সুন্দর করে, তোমার উপস্থিতি
             আমার জীবনকে অর্থবহ করে। আজকের দিনে শুধু এই কথাগুলো বলতে চাই - আমি তোমাকে অনেক ভালোবাসি এবং তোমার প্রতিটি
             স্বপ্ন পূরণ হোক।</p>
         </div>
 
-        <div class="message-box animate__animated animate__fadeInUp">
+        <div class="message-box animate__animated animate__fadeInUp" id="messageBox3">
           <h3><i class="fas fa-gift"></i> Mahfuzur এর কথাঃ</h3>
           <p>প্রিয় Era, তুমি জানো তো তুমি আমার জীবনে কতটা গুরুত্বপূর্ণ? তোমার জন্মদিনে আমি কৃতজ্ঞতা জানাই সেই
             সৃষ্টিকর্তাকে যিনি তোমাকে আমার জীবনে পাঠিয়েছেন। তোমার সাথে কাটানো প্রতিটি মুহূর্ত আমার জন্য সোনার মতো
@@ -750,6 +1326,10 @@
 
         <button class="gift-button" id="musicBtn">
           <i class="fas fa-music"></i> জন্মদিনের সুর
+        </button>
+
+        <button class="gift-button" id="readSpecialBtn">
+          <i class="fas fa-microphone"></i> বিশেষ বার্তা পড়ুন
         </button>
       </div>
 
@@ -779,15 +1359,122 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // আপনার নিজের ছবির লিঙ্ক এখানে দিন
+      // টেস্ট করার জন্য Postimages.org লিঙ্ক ব্যবহার করা হয়েছে
+      const predefinedImageData = {
+        era: [
+          {
+            id: 'era1',
+            // Era-র প্রথম ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/gj4wZDBy/Screenshot_2026_01_31_010127.png',
+            name: 'Era-র প্রথম ছবি'
+          },
+          {
+            id: 'era2',
+            // Era-র দ্বিতীয় ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/vBNwjxjX/mylove.jpg',
+            name: 'Era-র দ্বিতীয় ছবি'
+          },
+          {
+            id: 'era3',
+            // Era-র তৃতীয় ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/1XynXTMJ/Screenshot_2026_01_31_010040.png',
+            name: 'Era-র তৃতীয় ছবি'
+          },
+          {
+            id: 'era4',
+            // Era-র চতুর্থ ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/50g97tqJ/Screenshot-2026-01-31-010231.png',
+            name: 'Era-র চতুর্থ ছবি'
+          }
+        ],
+        mahfuzur: [
+          {
+            id: 'mahfuzur1',
+            // Mahfuzur-র প্রথম ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/LXbF7g7b/mahfuz.jpg',
+            name: 'Mahfuzur-র প্রথম ছবি'
+          },
+          {
+            id: 'mahfuzur2',
+            // Mahfuzur-র দ্বিতীয় ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/KjQKMNst/Screenshot_2026_01_31_010401.png',
+            name: 'Mahfuzur-র দ্বিতীয় ছবি'
+          },
+          {
+            id: 'mahfuzur3',
+            // Mahfuzur-র তৃতীয় ছবির লিঙ্ক দিন
+            url: 'https://i.postimg.cc/prk9FZ1C/Screenshot_2026_01_31_010430.png',
+            name: 'Mahfuzur-র তৃতীয় ছবি'
+          },
+
+        ]
+      };
+
       // Create floating hearts
       createFloatingHearts();
 
       const showMessageBtn = document.getElementById('showMessageBtn');
       const loveBtn = document.getElementById('loveBtn');
       const musicBtn = document.getElementById('musicBtn');
+      const readSpecialBtn = document.getElementById('readSpecialBtn');
       const specialMessage = document.getElementById('specialMessage');
       const birthdayAudio = document.getElementById('birthdayAudio');
       let isPlaying = false;
+
+      // Voice control elements
+      const readAllBtn = document.getElementById('readAllBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const readHeaderBtn = document.getElementById('readHeaderBtn');
+
+      // Image upload elements
+      const uploadModal = document.getElementById('uploadModal');
+      const uploadOptions = document.getElementById('uploadOptions');
+      const predefinedSection = document.getElementById('predefinedSection');
+      const customUploadSection = document.getElementById('customUploadSection');
+      const linkInputSection = document.getElementById('linkInputSection');
+      const uploadArea = document.getElementById('uploadArea');
+      const imageInput = document.getElementById('imageInput');
+      const imagePreview = document.getElementById('imagePreview');
+      const imageLinkInput = document.getElementById('imageLinkInput');
+      const linkPreview = document.getElementById('linkPreview');
+      const imageError = document.getElementById('imageError');
+      const backupImages = document.getElementById('backupImages');
+      const confirmUpload = document.getElementById('confirmUpload');
+      const cancelUpload = document.getElementById('cancelUpload');
+      const usePredefinedBtn = document.getElementById('usePredefinedBtn');
+      const uploadCustomBtn = document.getElementById('uploadCustomBtn');
+      const useLinkBtn = document.getElementById('useLinkBtn');
+      const confirmPredefined = document.getElementById('confirmPredefined');
+      const backToOptions = document.getElementById('backToOptions');
+      const testLinkBtn = document.getElementById('testLinkBtn');
+      const confirmLink = document.getElementById('confirmLink');
+      const cancelLink = document.getElementById('cancelLink');
+      const predefinedImages = document.getElementById('predefinedImages');
+      const predefinedTitle = document.getElementById('predefinedTitle');
+      const modalTitle = document.getElementById('modalTitle');
+
+      let currentUploadType = '';
+      let uploadedImage = null;
+      let selectedPredefinedImage = null;
+
+      // Speech synthesis
+      const speech = window.speechSynthesis;
+      let currentUtterance = null;
+      let isSpeechSupported = false;
+
+      // Check if speech synthesis is supported
+      if ('speechSynthesis' in window) {
+        isSpeechSupported = true;
+      } else {
+        readAllBtn.disabled = true;
+        readHeaderBtn.disabled = true;
+        readSpecialBtn.disabled = true;
+        showToast('আপনার ব্রাউজারে টেক্সট টু স্পিচ সাপোর্ট করে না');
+      }
+
+      // Load default images on page load
+      loadDefaultImages();
 
       // Show special message
       showMessageBtn.addEventListener('click', function () {
@@ -820,6 +1507,11 @@
 
         const randomMessage = messages[Math.floor(Math.random() * messages.length)];
         showToast(randomMessage);
+
+        // Speak the message
+        if (isSpeechSupported) {
+          speakText(randomMessage, false);
+        }
       });
 
       // Music button click
@@ -836,6 +1528,441 @@
           showToast('মিউজিক বন্ধ করা হয়েছে');
         }
       });
+
+      // Read special message button
+      readSpecialBtn.addEventListener('click', function () {
+        if (!specialMessage.classList.contains('show')) {
+          specialMessage.classList.add('show');
+        }
+
+        const specialText = getTextFromElement(specialMessage);
+        if (isSpeechSupported && specialText) {
+          speakText(specialText, specialMessage);
+        }
+
+        specialMessage.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Read all button
+      readAllBtn.addEventListener('click', function () {
+        const allText = collectAllText();
+        if (isSpeechSupported && allText) {
+          speakText(allText);
+        }
+      });
+
+      // Read header button
+      readHeaderBtn.addEventListener('click', function () {
+        const header = document.querySelector('.header');
+        const headerText = getTextFromElement(header);
+        if (isSpeechSupported && headerText) {
+          speakText(headerText);
+        }
+      });
+
+      // Stop button
+      stopBtn.addEventListener('click', function () {
+        stopSpeech();
+      });
+
+      // Click on message boxes to read them
+      document.querySelectorAll('.message-box').forEach((box, index) => {
+        box.addEventListener('click', function () {
+          const text = getTextFromElement(this);
+          if (isSpeechSupported && text) {
+            speakText(text, this);
+          }
+        });
+      });
+
+      // Click on hidden message to read it
+      specialMessage.addEventListener('click', function () {
+        const text = getTextFromElement(this);
+        if (isSpeechSupported && text) {
+          speakText(text, this);
+        }
+      });
+
+      // Image upload functionality
+      document.querySelectorAll('.photo-upload-btn, .photo-wrapper').forEach(element => {
+        element.addEventListener('click', function () {
+          const type = this.getAttribute('data-type') ||
+            this.closest('.photo-wrapper').getAttribute('data-type');
+          openUploadModal(type);
+        });
+      });
+
+      // Open upload modal
+      function openUploadModal(type) {
+        currentUploadType = type;
+        const title = type === 'era' ? 'Era-র ছবি সেট করুন' : 'Mahfuzur-র ছবি সেট করুন';
+        modalTitle.textContent = title;
+        predefinedTitle.textContent = type === 'era' ? 'Era-র জন্য ছবি নির্বাচন করুন' : 'Mahfuzur-র জন্য ছবি নির্বাচন করুন';
+
+        // Reset everything
+        resetModal();
+
+        // Show options first
+        uploadOptions.style.display = 'flex';
+        predefinedSection.style.display = 'none';
+        customUploadSection.style.display = 'none';
+        linkInputSection.style.display = 'none';
+
+        // Show modal
+        uploadModal.classList.add('active');
+
+        // Load predefined images for this type
+        loadPredefinedImages(type);
+      }
+
+      // Reset modal state
+      function resetModal() {
+        imageInput.value = '';
+        imagePreview.src = '';
+        imagePreview.classList.remove('show');
+        imageLinkInput.value = '';
+        linkPreview.src = '';
+        linkPreview.classList.remove('show');
+        uploadedImage = null;
+        selectedPredefinedImage = null;
+        imageError.style.display = 'none';
+
+        // Clear selected state from predefined images
+        document.querySelectorAll('.predefined-img').forEach(img => {
+          img.classList.remove('selected');
+        });
+      }
+
+      // Use predefined images
+      usePredefinedBtn.addEventListener('click', function () {
+        uploadOptions.style.display = 'none';
+        predefinedSection.style.display = 'block';
+        customUploadSection.style.display = 'none';
+        linkInputSection.style.display = 'none';
+      });
+
+      // Upload custom image
+      uploadCustomBtn.addEventListener('click', function () {
+        uploadOptions.style.display = 'none';
+        predefinedSection.style.display = 'none';
+        customUploadSection.style.display = 'block';
+        linkInputSection.style.display = 'none';
+      });
+
+      // Use link for image
+      useLinkBtn.addEventListener('click', function () {
+        uploadOptions.style.display = 'none';
+        predefinedSection.style.display = 'none';
+        customUploadSection.style.display = 'none';
+        linkInputSection.style.display = 'block';
+      });
+
+      // Back to options
+      backToOptions.addEventListener('click', function () {
+        predefinedSection.style.display = 'none';
+        customUploadSection.style.display = 'none';
+        linkInputSection.style.display = 'none';
+        uploadOptions.style.display = 'flex';
+        resetModal();
+      });
+
+      // Load predefined images
+      function loadPredefinedImages(type) {
+        predefinedImages.innerHTML = '';
+        imageError.style.display = 'none';
+        const images = predefinedImageData[type];
+
+        images.forEach(img => {
+          // Skip placeholder images
+          if (img.url.includes('YOUR_') && img.url.includes('_HERE')) {
+            return;
+          }
+
+          const imgElement = document.createElement('img');
+          imgElement.className = 'predefined-img';
+          imgElement.src = img.url;
+          imgElement.alt = img.name;
+          imgElement.title = img.name;
+          imgElement.dataset.id = img.id;
+          imgElement.dataset.url = img.url;
+
+          // Test if image loads successfully
+          const testImage = new Image();
+          testImage.onload = function () {
+            imgElement.style.opacity = '1';
+          };
+          testImage.onerror = function () {
+            imgElement.style.opacity = '0.5';
+            imgElement.style.borderColor = '#ff0000';
+            imgElement.title = 'ছবি লোড করতে সমস্যা! অন্য ছবি নির্বাচন করুন';
+            imageError.style.display = 'block';
+          };
+          testImage.src = img.url;
+
+          imgElement.addEventListener('click', function () {
+            // Remove selected class from all
+            document.querySelectorAll('.predefined-img').forEach(i => {
+              i.classList.remove('selected');
+            });
+
+            // Add selected class to clicked image
+            this.classList.add('selected');
+            selectedPredefinedImage = this.dataset.url;
+          });
+
+          predefinedImages.appendChild(imgElement);
+        });
+
+        // Add backup image buttons
+        backupImages.querySelectorAll('.backup-img-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const backupUrl = this.dataset.url;
+            if (confirm('এই বিকল্প ছবি সেট করতে চান?')) {
+              setProfilePhoto(currentUploadType, backupUrl);
+              closeUploadModal();
+              showToast('ছবি সেট করা হয়েছে!');
+            }
+          });
+        });
+      }
+
+      // Confirm predefined image
+      confirmPredefined.addEventListener('click', function () {
+        if (selectedPredefinedImage) {
+          setProfilePhoto(currentUploadType, selectedPredefinedImage);
+          closeUploadModal();
+          showToast(currentUploadType === 'era' ?
+            'Era-র ছবি সেট করা হয়েছে! ❤️' :
+            'Mahfuzur-র ছবি সেট করা হয়েছে!');
+        } else {
+          showToast('দয়া করে একটি ছবি নির্বাচন করুন');
+        }
+      });
+
+      // Test image link
+      testLinkBtn.addEventListener('click', function () {
+        const link = imageLinkInput.value.trim();
+        if (link) {
+          // Test if it's a valid image link
+          if (isValidImageLink(link)) {
+            const testImage = new Image();
+            testImage.onload = function () {
+              linkPreview.src = link;
+              linkPreview.classList.add('show');
+              uploadedImage = link;
+              showToast('ছবি লোড করা হয়েছে! ✅');
+            };
+            testImage.onerror = function () {
+              showToast('ছবি লোড করতে সমস্যা! লিঙ্কটি চেক করুন ❌');
+              linkPreview.src = '';
+              linkPreview.classList.remove('show');
+              uploadedImage = null;
+            };
+            testImage.src = link;
+          } else {
+            showToast('দয়া করে একটি বৈধ ছবি লিঙ্ক দিন (.jpg, .png, .jpeg, .gif)');
+          }
+        } else {
+          showToast('দয়া করে একটি লিঙ্ক দিন');
+        }
+      });
+
+      // Confirm link image
+      confirmLink.addEventListener('click', function () {
+        if (uploadedImage && isValidImageLink(uploadedImage)) {
+          setProfilePhoto(currentUploadType, uploadedImage);
+          closeUploadModal();
+          showToast(currentUploadType === 'era' ?
+            'Era-র ছবি সেট করা হয়েছে! ❤️' :
+            'Mahfuzur-র ছবি সেট করা হয়েছে!');
+        } else {
+          showToast('দয়া করে একটি বৈধ ছবি লিঙ্ক দিন');
+        }
+      });
+
+      // Cancel link
+      cancelLink.addEventListener('click', function () {
+        closeUploadModal();
+      });
+
+      // Upload area click
+      uploadArea.addEventListener('click', function () {
+        imageInput.click();
+      });
+
+      // File input change
+      imageInput.addEventListener('change', function (e) {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            imagePreview.src = event.target.result;
+            imagePreview.classList.add('show');
+            uploadedImage = event.target.result;
+          };
+
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Confirm upload
+      confirmUpload.addEventListener('click', function () {
+        if (uploadedImage) {
+          setProfilePhoto(currentUploadType, uploadedImage);
+          closeUploadModal();
+          showToast(currentUploadType === 'era' ?
+            'Era-র ছবি সেট করা হয়েছে! ❤️' :
+            'Mahfuzur-র ছবি সেট করা হয়েছে!');
+        } else {
+          showToast('দয়া করে একটি ছবি নির্বাচন করুন');
+        }
+      });
+
+      // Cancel upload
+      cancelUpload.addEventListener('click', function () {
+        closeUploadModal();
+      });
+
+      // Close upload modal
+      function closeUploadModal() {
+        uploadModal.classList.remove('active');
+        resetModal();
+      }
+
+      // Check if a link is a valid image link
+      function isValidImageLink(link) {
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+        return imageExtensions.some(ext => link.toLowerCase().endsWith(ext));
+      }
+
+      // Set profile photo
+      function setProfilePhoto(type, imageSrc) {
+        const placeholderId = type === 'era' ? 'eraPlaceholder' : 'mahfuzurPlaceholder';
+        const photoId = type === 'era' ? 'eraPhoto' : 'mahfuzurPhoto';
+
+        const placeholder = document.getElementById(placeholderId);
+        const photo = document.getElementById(photoId);
+
+        // Hide placeholder and show photo
+        placeholder.style.display = 'none';
+
+        // Test if image loads
+        const testImg = new Image();
+        testImg.onload = function () {
+          photo.src = imageSrc;
+          photo.style.display = 'block';
+          photo.style.opacity = '1';
+
+          // Add animation effect
+          const wrapper = document.getElementById(type + 'PhotoWrapper');
+          wrapper.style.animation = 'none';
+          setTimeout(() => {
+            wrapper.style.animation = 'rotatePhoto 20s linear infinite';
+          }, 10);
+
+          // Save to localStorage
+          localStorage.setItem(type + '_photo', imageSrc);
+
+          // Add floating hearts effect
+          createHeartsAroundPhoto(wrapper);
+        };
+
+        testImg.onerror = function () {
+          showToast('ছবি লোড করতে সমস্যা! অন্য লিঙ্ক দিন');
+          placeholder.style.display = 'flex';
+          photo.style.display = 'none';
+        };
+
+        testImg.src = imageSrc;
+      }
+
+      // Load saved photos from localStorage
+      function loadSavedPhotos() {
+        const eraPhoto = localStorage.getItem('era_photo');
+        const mahfuzurPhoto = localStorage.getItem('mahfuzur_photo');
+
+        if (eraPhoto) {
+          setProfilePhoto('era', eraPhoto);
+        }
+
+        if (mahfuzurPhoto) {
+          setProfilePhoto('mahfuzur', mahfuzurPhoto);
+        }
+      }
+
+      // Load default images on page load
+      function loadDefaultImages() {
+        // Check if any photos are already saved
+        const eraPhoto = localStorage.getItem('era_photo');
+        const mahfuzurPhoto = localStorage.getItem('mahfuzur_photo');
+
+        // If no saved photos, check predefined images
+        if (!eraPhoto) {
+          // Check if predefined images have valid URLs
+          const eraImages = predefinedImageData.era;
+          const validEraImage = eraImages.find(img =>
+            img.url &&
+            img.url.startsWith('http') &&
+            !img.url.includes('YOUR_')
+          );
+
+          if (validEraImage) {
+            setProfilePhoto('era', validEraImage.url);
+          } else {
+            // Use backup image
+            setProfilePhoto('era', 'https://i.postimg.cc/CxN13v1V/couple1.jpg');
+          }
+        } else {
+          setProfilePhoto('era', eraPhoto);
+        }
+
+        if (!mahfuzurPhoto) {
+          // Check if predefined images have valid URLs
+          const mahfuzurImages = predefinedImageData.mahfuzur;
+          const validMahfuzurImage = mahfuzurImages.find(img =>
+            img.url &&
+            img.url.startsWith('http') &&
+            !img.url.includes('YOUR_')
+          );
+
+          if (validMahfuzurImage) {
+            setProfilePhoto('mahfuzur', validMahfuzurImage.url);
+          } else {
+            // Use backup image
+            setProfilePhoto('mahfuzur', 'https://i.postimg.cc/JnNszv3t/couple2.jpg');
+          }
+        } else {
+          setProfilePhoto('mahfuzur', mahfuzurPhoto);
+        }
+      }
+
+      // Create floating hearts around photo
+      function createHeartsAroundPhoto(photoElement) {
+        const rect = photoElement.getBoundingClientRect();
+
+        for (let i = 0; i < 15; i++) {
+          const heart = document.createElement('div');
+          heart.innerHTML = '❤️';
+          heart.style.position = 'absolute';
+          heart.style.left = (rect.left + rect.width / 2) + 'px';
+          heart.style.top = (rect.top + rect.height / 2) + 'px';
+          heart.style.color = '#ff4d8d';
+          heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+          heart.style.opacity = '0.9';
+          heart.style.zIndex = '9999';
+          heart.style.animation = `heartExplode ${Math.random() * 1 + 0.5}s ease-out forwards`;
+
+          document.body.appendChild(heart);
+
+          // Remove heart after animation
+          setTimeout(() => {
+            if (heart.parentNode) {
+              heart.remove();
+            }
+          }, 1500);
+        }
+      }
 
       // Create floating hearts in background
       function createFloatingHearts() {
@@ -935,26 +2062,10 @@
             }
           }, animationDuration * 1000);
         }
-
-        // Add CSS for confetti animation
-        const style = document.createElement('style');
-        if (!document.querySelector('#confetti-style')) {
-          style.id = 'confetti-style';
-          style.textContent = `
-                        @keyframes confettiFall {
-                            to {
-                                transform: translateY(100vh) rotate(360deg);
-                                opacity: 0;
-                            }
-                        }
-                    `;
-          document.head.appendChild(style);
-        }
       }
 
       // Show toast message
       function showToast(message) {
-        // Remove existing toast
         const existingToast = document.querySelector('.toast-message');
         if (existingToast) {
           existingToast.remove();
@@ -978,7 +2089,6 @@
 
         document.body.appendChild(toast);
 
-        // Remove toast after 3 seconds
         setTimeout(() => {
           if (toast.parentNode) {
             toast.remove();
@@ -986,16 +2096,113 @@
         }, 3000);
       }
 
-      // Add CSS for toast animation
-      const toastStyle = document.createElement('style');
-      toastStyle.textContent = `
-                @keyframes fadeOut {
-                    to { opacity: 0; transform: translateX(-50%) translateY(20px); }
-                }
-            `;
-      document.head.appendChild(toastStyle);
+      // Speech synthesis functions
+      function speakText(text, element = null) {
+        if (!isSpeechSupported) return;
 
-      // Handle mobile touch events better
+        stopSpeech();
+
+        document.querySelectorAll('.playing').forEach(el => {
+          el.classList.remove('playing');
+        });
+
+        if (element) {
+          element.classList.add('playing');
+        }
+
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = 'bn-BD';
+        currentUtterance.rate = 1.0;
+        currentUtterance.pitch = 1.0;
+        currentUtterance.volume = 1.0;
+
+        const voices = speech.getVoices();
+        const bengaliVoice = voices.find(voice =>
+          voice.lang === 'bn' ||
+          voice.lang === 'bn-BD' ||
+          voice.lang === 'bn-IN' ||
+          voice.name.includes('Bengali')
+        );
+
+        if (bengaliVoice) {
+          currentUtterance.voice = bengaliVoice;
+        }
+
+        currentUtterance.onstart = function () {
+          stopBtn.disabled = false;
+          readAllBtn.disabled = true;
+          readHeaderBtn.disabled = true;
+          readSpecialBtn.disabled = true;
+        };
+
+        currentUtterance.onend = function () {
+          stopBtn.disabled = true;
+          readAllBtn.disabled = false;
+          readHeaderBtn.disabled = false;
+          readSpecialBtn.disabled = false;
+
+          if (element) {
+            element.classList.remove('playing');
+          }
+        };
+
+        currentUtterance.onerror = function (event) {
+          stopBtn.disabled = true;
+          readAllBtn.disabled = false;
+          readHeaderBtn.disabled = false;
+          readSpecialBtn.disabled = false;
+
+          if (element) {
+            element.classList.remove('playing');
+          }
+        };
+
+        speech.speak(currentUtterance);
+      }
+
+      function stopSpeech() {
+        if (speech.speaking) {
+          speech.cancel();
+          stopBtn.disabled = true;
+          readAllBtn.disabled = false;
+          readHeaderBtn.disabled = false;
+          readSpecialBtn.disabled = false;
+
+          document.querySelectorAll('.playing').forEach(el => {
+            el.classList.remove('playing');
+          });
+        }
+      }
+
+      function getTextFromElement(element) {
+        const clone = element.cloneNode(true);
+        clone.querySelectorAll('button, .fa, .fas, .far, .fab, .gift-button').forEach(el => {
+          el.remove();
+        });
+        return clone.textContent.trim();
+      }
+
+      function collectAllText() {
+        const texts = [];
+
+        const header = document.querySelector('.header');
+        texts.push(getTextFromElement(header));
+
+        document.querySelectorAll('.message-box').forEach(box => {
+          texts.push(getTextFromElement(box));
+        });
+
+        if (specialMessage.classList.contains('show')) {
+          texts.push(getTextFromElement(specialMessage));
+        }
+
+        const footer = document.querySelector('.footer');
+        texts.push(getTextFromElement(footer));
+
+        return texts.join('\n\n');
+      }
+
+      // Handle mobile touch events
       document.querySelectorAll('.gift-button').forEach(button => {
         button.addEventListener('touchstart', function () {
           this.style.transform = 'scale(0.95)';
@@ -1006,7 +2213,7 @@
         });
       });
 
-      // Prevent zoom on double tap (for mobile)
+      // Prevent zoom on double tap
       let lastTouchEnd = 0;
       document.addEventListener('touchend', function (event) {
         const now = (new Date()).getTime();
@@ -1015,6 +2222,37 @@
         }
         lastTouchEnd = now;
       }, false);
+
+      // Load saved photos on page load
+      loadSavedPhotos();
+
+      // Add CSS animations if not exists
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes heartExplode {
+          0% {
+            transform: translate(0, 0) scale(0.5);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(1);
+            opacity: 0;
+          }
+        }
+        @keyframes confettiFall {
+          to {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        @keyframes fadeOut {
+          to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+      `;
+      document.head.appendChild(style);
     });
   </script>
 </body>
